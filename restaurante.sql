@@ -61,7 +61,7 @@ INSERT INTO `RESERVA` (`codigo`, `fecha`, `cedula_usuario`) VALUES
 (3, '2016-12-02 19:00:00', '7130372811'),
 (4, '2016-08-16 14:00:00', '6446622303'),
 (5, '2017-01-19 10:00:00', '1060088283'),
-(6, '0000-00-00 00:00:00', '9712387915'),
+(6, '2017-02-13 14:00:00', '9712387915'),
 (7, '2017-05-14 09:15:00', '6108609382'),
 (8, '2017-05-14 13:15:00', '1054226011'),
 (9, '2017-05-14 18:00:00', '1039950833'),
@@ -161,43 +161,6 @@ INSERT INTO `EMPLEADO` (`cedula`, `nombre`, `apellido`, `salario`, `celular`, `t
 ('9504603440', 'IVÁN', 'ALONSO PRIETO', 500000, '3126954666', '6890593', 'CRA 22 # 2 CA 1', 3),
 ('9700944836', 'PEDRO', 'ALONSO SUAREZ', 500000, '3219289026', '6719842', 'CLL 1 # 8 – 3', 3);
 
-CREATE TABLE IF NOT EXISTS FACTURA (
-    codigo INT NOT NULL AUTO_INCREMENT,
-    detalle VARCHAR(100),
-    fecha DATETIME NOT NULL,
-    PRIMARY KEY (codigo)
-)ENGINE = InnoDB;
-
-INSERT INTO `FACTURA` (`codigo`, `detalle`, `fecha`) VALUES
-(1, 'DESCUENTO 30%', '2016-01-03 12:00:00'),
-(2, NULL, '2016-01-08 09:00:00'),
-(3, NULL, '2016-01-19 16:30:00'),
-(4, 'CON RESERVA', '2016-05-08 12:00:00'),
-(5, 'CON RESERVA', '2016-05-08 16:45:00'),
-(6, NULL, '2016-04-12 14:00:00'),
-(7, NULL, '2016-07-29 15:50:00'),
-(8, 'DESCUENTO 30%', '2016-07-29 16:00:00'),
-(9, NULL, '2016-10-08 10:00:00'),
-(10, NULL, '2016-12-19 12:00:00'),
-(11, NULL, '2016-12-30 11:00:00'),
-(12, NULL, '2017-01-03 14:00:00'),
-(13, 'DESCUENTO 30%', '2017-01-29 16:30:00'),
-(14, NULL, '2017-02-10 12:00:00'),
-(15, NULL, '2017-02-15 12:30:00'),
-(16, 'DESCUENTO 30%', '2017-03-12 10:40:00'),
-(17, NULL, '2017-04-21 09:00:00'),
-(18, 'CON RESERVA', '2017-05-14 09:15:00'),
-(19, 'CON RESERVA', '2017-05-14 13:15:00'),
-(20, 'CON RESERVA', '2017-05-14 18:00:00'),
-(21, NULL, '2017-12-12 13:30:00'),
-(22, NULL, '2018-02-09 16:00:00'),
-(23, 'DESCUENTO 30%', '2018-04-08 14:00:00'),
-(24, NULL, '2018-05-12 10:45:00'),
-(25, NULL, '2018-08-04 12:15:00'),
-(26, NULL, '2018-10-14 13:30:00'),
-(27, 'CON RESERVA', '2017-05-14 08:15:00'),
-(28, NULL, '2018-12-27 12:40:00');
-
 
 CREATE TABLE IF NOT EXISTS ORDEN (
     codigo INT NOT NULL AUTO_INCREMENT,
@@ -205,10 +168,8 @@ CREATE TABLE IF NOT EXISTS ORDEN (
     descripcion VARCHAR(100),
     cedula_usuario VARCHAR(20),
     cedula_mesero VARCHAR(20),
-    codigo_factura INT NOT NULL,
     numero_mesa INT,
     PRIMARY KEY (codigo),
-    UNIQUE (codigo_factura),
     CONSTRAINT fk_usuario_orden
     FOREIGN KEY (cedula_usuario)
     REFERENCES USUARIO(cedula)
@@ -219,11 +180,6 @@ CREATE TABLE IF NOT EXISTS ORDEN (
     REFERENCES EMPLEADO(cedula)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-    CONSTRAINT fk_factura_orden
-    FOREIGN KEY (codigo_factura)
-    REFERENCES FACTURA(codigo)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
     CONSTRAINT fk_mesa_orden
     FOREIGN KEY (numero_mesa)
     REFERENCES MESA(numero)
@@ -231,35 +187,79 @@ CREATE TABLE IF NOT EXISTS ORDEN (
     ON UPDATE CASCADE
 )ENGINE = InnoDB;
 
-INSERT INTO `ORDEN` (`codigo`, `valor_total`, `descripcion`, `cedula_usuario`, `cedula_mesero`, `codigo_factura`, `numero_mesa`) VALUES
-(1, 20000, NULL, NULL, '2043295585', 1, 2),
-(2, 15800, NULL, '6108609382', NULL, 2, NULL),
-(3, 21300, NULL, NULL, '1882336772', 3, 10),
-(4, 21000, NULL, NULL, '1882336772', 4, 1),
-(5, 40800, NULL, '1060088283', '8924447735', 5, 9),
-(6, 52000, NULL, '1054226011', '2043295585', 6, 18),
-(7, 213000, NULL, '1039950833', NULL, 7, NULL),
-(8, 5000, NULL, NULL, '1882336772', 8, 5),
-(9, 35000, NULL, '1039950833', NULL, 9, NULL),
-(10, 10000, NULL, NULL, '8924447735', 10, 7),
-(11, 43000, NULL, '6446622303', '2043295585', 11, 3),
-(12, 2000, NULL, NULL, NULL, 12, NULL),
-(13, 21000, NULL, '6446622303', '8924447735', 13, 8),
-(14, 20000, NULL, NULL, '1882336772', 14, 5),
-(15, 31000, NULL, NULL, '2043295585', 15, 15),
-(16, 14000, NULL, '6108609382', '2043295585', 16, 6),
-(17, 34000, NULL, NULL, NULL, 17, NULL),
-(18, 12000, NULL, '6108609382', '2043295585', 18, 6),
-(19, 60000, NULL, '1054226011', '8924447735', 19, 5),
-(20, 43000, NULL, NULL, '2043295585', 20, 6),
-(21, 40000, NULL, '7130372811', '1882336772', 21, 10),
-(22, 31000, NULL, NULL, '1882336772', 22, 12),
-(23, 10000, NULL, '1063238921', '8924447735', 23, 3),
-(24, 5000, NULL, NULL, '2043295585', 24, 2),
-(25, 10000, NULL, '9712387915', '2043295585', 25, 20),
-(26, 7000, NULL, '1063238921', NULL, 26, NULL),
-(27, 2000, NULL, '8761293621', NULL, 27, NULL),
-(28, 40000, NULL, '5592309480', NULL, 28, NULL);
+INSERT INTO `ORDEN` (`codigo`, `valor_total`, `descripcion`, `cedula_usuario`, `cedula_mesero`, `numero_mesa`) VALUES
+(1, 20000, NULL, NULL, '2043295585',2),
+(2, 15800, NULL, '6108609382', NULL,NULL),
+(3, 21300, NULL, NULL, '1882336772',10),
+(4, 21000, NULL, NULL, '1882336772',1),
+(5, 40800, NULL, '1060088283', '8924447735',9),
+(6, 52000, NULL, '1054226011', '2043295585',18),
+(7, 213000, NULL, '1039950833', NULL,NULL),
+(8, 5000, NULL, NULL, '1882336772',5),
+(9, 35000, NULL, '1039950833', NULL,NULL),
+(10, 10000, NULL, NULL, '8924447735', 7),
+(11, 43000, NULL, '6446622303', '2043295585', 3),
+(12, 2000, NULL, NULL, NULL, NULL),
+(13, 21000, NULL, '6446622303', '8924447735', 8),
+(14, 20000, NULL, NULL, '1882336772', 5),
+(15, 31000, NULL, NULL, '2043295585', 15),
+(16, 14000, NULL, '6108609382', '2043295585', 6),
+(17, 34000, NULL, NULL, NULL, NULL),
+(18, 12000, NULL, '6108609382', '2043295585', 6),
+(19, 60000, NULL, '1054226011', '8924447735', 5),
+(20, 43000, NULL, NULL, '2043295585', 6),
+(21, 40000, NULL, '7130372811', '1882336772', 10),
+(22, 31000, NULL, NULL, '1882336772', 12),
+(23, 10000, NULL, '1063238921', '8924447735', 3),
+(24, 5000, NULL, NULL, '2043295585', 2),
+(25, 10000, NULL, '9712387915', '2043295585', 20),
+(26, 7000, NULL, '1063238921', NULL, NULL),
+(27, 2000, NULL, '8761293621', NULL, NULL),
+(28, 40000, NULL, '5592309480', NULL, NULL);
+
+CREATE TABLE IF NOT EXISTS FACTURA (
+    codigo INT NOT NULL AUTO_INCREMENT,
+    detalle VARCHAR(100),
+    fecha DATETIME NOT NULL,
+    codigo_orden INT NOT NULL,
+    UNIQUE(codigo_orden),
+    PRIMARY KEY (codigo),
+    CONSTRAINT fk_orden_factura
+    FOREIGN KEY (codigo_orden)
+    REFERENCES ORDEN(codigo)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+)ENGINE = InnoDB;
+
+INSERT INTO `FACTURA` (`codigo`, `detalle`, `fecha`, `codigo_orden`) VALUES
+(1, 'DESCUENTO 30%', '2016-01-03 12:00:00', 1),
+(2, NULL, '2016-01-08 09:00:00', 2),
+(3, NULL, '2016-01-19 16:30:00', 3),
+(4, 'CON RESERVA', '2016-05-08 12:00:00', 4),
+(5, 'CON RESERVA', '2016-05-08 16:45:00', 5),
+(6, NULL, '2016-04-12 14:00:00', 6),
+(7, NULL, '2016-07-29 15:50:00', 7),
+(8, 'DESCUENTO 30%', '2016-07-29 16:00:00', 8),
+(9, NULL, '2016-10-08 10:00:00', 9),
+(10, NULL, '2016-12-19 12:00:00', 10),
+(11, NULL, '2016-12-30 11:00:00', 11),
+(12, NULL, '2017-01-03 14:00:00', 12),
+(13, 'DESCUENTO 30%', '2017-01-29 16:30:00', 13),
+(14, NULL, '2017-02-10 12:00:00', 14),
+(15, NULL, '2017-02-15 12:30:00', 15),
+(16, 'DESCUENTO 30%', '2017-03-12 10:40:00', 16),
+(17, NULL, '2017-04-21 09:00:00', 17),
+(18, 'CON RESERVA', '2017-05-14 09:15:00', 18),
+(19, 'CON RESERVA', '2017-05-14 13:15:00', 19),
+(20, 'CON RESERVA', '2017-05-14 18:00:00', 20),
+(21, NULL, '2017-12-12 13:30:00', 21),
+(22, NULL, '2018-02-09 16:00:00', 22),
+(23, 'DESCUENTO 30%', '2018-04-08 14:00:00', 23),
+(24, NULL, '2018-05-12 10:45:00', 24),
+(25, NULL, '2018-08-04 12:15:00', 25),
+(26, NULL, '2018-10-14 13:30:00', 26),
+(27, 'CON RESERVA', '2017-05-14 08:15:00', 27),
+(28, NULL, '2018-12-27 12:40:00', 28);
 
 CREATE TABLE IF NOT EXISTS TIPO_PRODUCTO (
     codigo INT NOT NULL AUTO_INCREMENT,
@@ -411,3 +411,70 @@ INSERT INTO `DOMICILIO` (`numero`, `codigo_orden`, `codigo_area`) VALUES
 (8, 12, 2),
 (9, 17, 2);
 
+/*
+
+Requerimientos:
+
+- Se desea conocer el usuarios(registrado) del restaurante que más va en un año determinado.
+SELECT cedula,nombre,apellido,COUNT(*) AS visitas FROM USUARIO U,ORDEN O, FACTURA F WHERE 
+O.cedula_usuario=U.cedula AND F.codigo_orden=O.codigo AND YEAR(F.fecha)=2016 GROUP BY cedula ORDER BY 
+visitas DESC LIMIT 1;
+
+- Se desea conocer el código, nombre, mes y número de ventas de los productos más vendido por mes en el restaurante en un año en específico.
+SELECT P.codigo,P.nombre,MONTH(F.fecha) AS mes,MAX(cantidad) AS ventas FROM 
+PRODUCTOS_X_ORDEN PXO,ORDEN O,FACTURA F,PRODUCTO P WHERE 
+PXO.codigo_orden=O.codigo AND O.codigo=F.codigo_orden AND P.codigo=PXO.codigo_producto AND 
+YEAR(F.fecha)= 2017 GROUP BY MONTH(F.fecha);
+
+- El restaurante cuenta con un descuentos especiales para aquel usuario que haya sumado el mayor valor acumulado 
+en compra de productos en un determinado año (Usuario que más haya gastado en órdenes). 
+Se pide conocer codigo, nombre, año y valor gastado del usuario.
+SELECT U.cedula,U.nombre,U.apellido,YEAR(F.fecha) AS año,SUM(O.valor_total) AS total_compras FROM
+USUARIO U, ORDEN O, FACTURA F WHERE
+U.cedula=O.cedula_usuario AND F.codigo_orden=O.codigo AND YEAR(F.fecha)=2016
+GROUP BY U.cedula ORDER BY total_compras DESC LIMIT 1;
+
+
+- Utilizando el promedio de ventas de un año se desea conocer los meses en que el promedio estuvo por encima de este.
+SELECT MONTH(F.fecha) AS mes,AVG(valor_total)FROM
+ORDEN O, FACTURA F WHERE 
+O.codigo=F.codigo_orden AND YEAR(F.fecha)=2016 GROUP BY mes HAVING AVG(valor_total)> 
+(SELECT AVG(ORDEN.valor_total) FROM
+ORDEN, FACTURA WHERE 
+ORDEN.codigo=FACTURA.codigo_orden AND YEAR(FACTURA.fecha) = 2017);
+
+- Se requiere conocer aquellos productos que no se vendieron en el año para realizar un plan de mejora.
+SELECT codigo,nombre FROM PRODUCTO P WHERE NOT EXISTS(
+SELECT * FROM PRODUCTOS_X_ORDEN PXO WHERE
+PXO.codigo_producto = P.codigo);
+
+- Se desea conocer cuál es el área de la ciudad de donde más se realizan pedidos y 
+el total de los pedidos hechos en esa zona.
+SELECT nombre,COUNT(*) AS num_domicilios FROM DOMICILIO D,AREA A WHERE
+D.codigo_area=A.codigo GROUP BY nombre ORDER BY num_domicilios DESC LIMIT 1;
+
+- Se desea conocer los meses en que se realizan más reservas en el restaurante para identificar aquellos fenómenos 
+que hagan que las personas estén más interesadas en reservar mesas en el local.
+SELECT MONTH(fecha) AS mes ,COUNT(*) AS num_reservas FROM
+RESERVA GROUP BY mes ORDER BY num_reservas DESC;
+
+- Se desea conocer los usuarios que están registrados pero no han adquirido ningún servicio del restaurante.
+SELECT cedula, nombre, apellido FROM USUARIO U WHERE cedula NOT IN
+(SELECT cedula FROM ORDEN, USUARIO WHERE ORDEN.cedula_usuario=USUARIO.cedula UNION 
+SELECT cedula FROM RESERVA, USUARIO WHERE RESERVA.cedula_usuario=USUARIO.cedula);
+
+- Se quieren conocer aquellos clientes que han adquirido órdenes del restaurante por 
+medio de los domicilios y personalmente.
+SELECT cedula, nombre, apellido FROM USUARIO U WHERE cedula IN
+(SELECT cedula FROM ORDEN, USUARIO WHERE ORDEN.cedula_usuario=USUARIO.cedula)
+AND cedula IN (SELECT cedula FROM DOMICILIO, USUARIO, ORDEN WHERE 
+ORDEN.cedula_usuario=USUARIO.cedula AND DOMICILIO.codigo_orden=ORDEN.codigo);
+
+- Se quiere conocer el o los usuarios registrados que llevan más de un año sin sin 
+adquirir productos del restaurante.
+SELECT cedula,nombre,apellido,MAX(fecha) AS ultima_visita FROM USUARIO U,ORDEN O, FACTURA F WHERE
+U.cedula=O.cedula_usuario AND O.codigo=F.codigo_orden GROUP BY cedula HAVING 
+ultima_visita < DATE_SUB(CURDATE(),INTERVAL 1 YEAR);
+
+
+*/
